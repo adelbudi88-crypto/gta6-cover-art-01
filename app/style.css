@@ -1,12 +1,130 @@
-html, body { margin: 0; height: 100%; background: #f2f0f4; color: #1d1b22; font: 15px/1.4 system-ui, sans-serif; }
-.app { display: flex; gap: 32px; align-items: center; justify-content: center; height: 100%; padding: 24px; box-sizing: border-box; }
-.controls { display: flex; flex-direction: column; gap: 14px; width: 280px; }
-.controls h1 { margin: 0; font-size: 28px; }
-.controls p { margin: 0; color: #5c5866; }
-label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
-input[type=text] { font: inherit; padding: 8px; border: 1px solid #c9c4d1; border-radius: 6px; }
-button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 6px; background: #1d1b22; color: #fff; cursor: pointer; }
-canvas { width: min(70vh, 60vw); height: min(70vh, 60vw); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-body.shot-cover .controls { display: none; }
-body.shot-cover .app { padding: 0; }
-body.shot-cover canvas { width: 100vw; height: 100vh; box-shadow: none; }
+/* Palm Neon — Sunset Cover Studio. Dark studio UI, neon accents, offline. */
+:root {
+  --bg: #12041f;
+  --panel: #1d0b33;
+  --panel-2: #251040;
+  --line: #3a1c5c;
+  --text: #f5eefc;
+  --muted: #b9a3d6;
+  --pink: #ff2e88;
+  --cyan: #00e5ff;
+  --gold: #ffd76a;
+  --radius: 14px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+}
+body.shot-mode { background: #12041f; }
+
+.topbar {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, #1d0b33, #2b0f45 55%, #3b0a4e);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 46px; height: 46px; border-radius: 12px;
+  display: grid; place-items: center;
+  font-weight: 900; font-size: 20px; color: #14041f;
+  background: linear-gradient(135deg, #ffd76a, #ff2e88 55%, #00e5ff);
+}
+.brand h1 {
+  margin: 0; font-size: 24px; letter-spacing: 2px; text-transform: uppercase;
+  font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+}
+.brand p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.privacy { margin: 0; color: var(--muted); font-size: 13px; max-width: 340px; text-align: right; }
+
+.studio {
+  display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px;
+  padding: 20px 22px 28px; max-width: 1280px; margin: 0 auto;
+}
+.preview-col { min-width: 0; }
+.preview-frame {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: #0a0214; padding: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+#previewCanvas {
+  display: block; width: 100%; height: auto; border-radius: 8px;
+  cursor: grab; touch-action: none;
+}
+#previewCanvas:active { cursor: grabbing; }
+.status { color: var(--muted); font-size: 13px; margin: 12px 2px; min-height: 18px; }
+.export-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.size-note { color: var(--muted); font-size: 13px; }
+
+button { font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid transparent; }
+button.primary {
+  background: linear-gradient(135deg, #ff2e88, #ff7a3c);
+  color: #fff; font-weight: 800; padding: 11px 18px;
+  box-shadow: 0 4px 18px rgba(255, 46, 136, 0.35);
+}
+button.primary:hover { filter: brightness(1.12); }
+button.ghost {
+  background: var(--panel-2); color: var(--text);
+  border-color: var(--line); font-weight: 700; padding: 10px 14px;
+}
+button.ghost:hover { border-color: var(--pink); }
+
+.controls { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.card h2 { margin: 0 0 10px; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); }
+.label { margin: 12px 0 6px; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.hint { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 10px 0 0; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+  padding: 8px 12px; font-weight: 700; font-size: 13px;
+}
+.chip:hover { border-color: var(--cyan); }
+.chip.on { border-color: var(--gold); color: #14041f; background: var(--gold); }
+.chip.swatch-sunset.on { background: linear-gradient(135deg, #ff9a5a, #ffd76a); }
+.chip.swatch-neon.on { background: linear-gradient(135deg, #ff2e88, #00e5ff); }
+.chip.swatch-heat.on { background: linear-gradient(135deg, #ff6a00, #ffc93c); }
+.chip.swatch-palm.on { background: linear-gradient(135deg, #37c978, #d8f79a); }
+.chip.swatch-vice.on { background: linear-gradient(135deg, #c94bff, #ff9de2); }
+
+.photo-strip { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.thumb {
+  width: 96px; padding: 0 0 4px; overflow: hidden;
+  background: var(--panel-2); border: 2px solid var(--line); color: var(--text);
+}
+.thumb canvas { display: block; width: 96px; height: 96px; object-fit: cover; }
+.thumb span { display: block; font-size: 11px; padding: 4px 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.thumb.active { border-color: var(--gold); }
+
+.panel-name { font-weight: 800; margin: 0 0 10px; }
+.slider-label, .field-label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin: 10px 0; }
+.slider-label span { color: var(--gold); float: right; }
+.slider-label input[type="range"], .field-label input { width: 100%; margin-top: 6px; }
+.field-label input {
+  background: #0f0320; border: 1px solid var(--line); color: var(--text);
+  border-radius: 8px; padding: 9px 10px; font-size: 14px; font-weight: 700;
+}
+.field-label input:focus { outline: 2px solid var(--pink); border-color: transparent; }
+input[type="range"] { accent-color: var(--pink); }
+
+.cast-editor { display: flex; flex-direction: column; gap: 8px; }
+.cast-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cast-row input {
+  background: #0f0320; border: 1px solid var(--line); color: var(--text);
+  border-radius: 8px; padding: 8px 10px; font-size: 13px; font-weight: 700; width: 100%;
+}
+.fineprint { color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
+
+@media (max-width: 900px) {
+  .studio { grid-template-columns: 1fr; }
+  .privacy { display: none; }
+}

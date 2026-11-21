@@ -1,23 +1,103 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Palm Neon — Sunset Cover Studio</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">PN</span>
+    <div>
+      <h1>Palm Neon</h1>
+      <p>Sunset Cover Studio — multi-panel poster maker</p>
+    </div>
+  </div>
+  <p class="privacy">Your photos never leave this machine. No upload, no account, no network.</p>
+</header>
+
+<main class="studio">
+  <section class="preview-col">
+    <div class="preview-frame">
+      <canvas id="previewCanvas" width="800" height="800" aria-label="Live cover preview. Click a panel to select it, drag to move its photo, scroll to zoom."></canvas>
+    </div>
+    <p id="statusLine" class="status" role="status">Loading…</p>
+    <div class="export-row">
+      <button id="exportBtn" class="primary">Export PNG</button>
+      <button id="exportAllBtn" class="ghost">Export all 3 sizes</button>
+      <span class="size-note">1080×1080 · 1080×1350 · 1920×1080</span>
+    </div>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+
+  <aside class="controls">
+    <section class="card">
+      <h2>1 · Photos</h2>
+      <div class="btn-row">
+        <button id="addPhotoBtn" class="primary">Add your photos</button>
+        <button id="sampleBtn" class="ghost">Load samples</button>
+      </div>
+      <input id="photoInput" type="file" accept="image/*" multiple hidden>
+      <div id="photoStrip" class="photo-strip"></div>
+      <p id="photoHint" class="hint">No photo yet — load the samples or drop in your own.</p>
+    </section>
+
+    <section class="card">
+      <h2>2 · Layout &amp; grade</h2>
+      <p class="label">Layout</p>
+      <div id="layoutBar" class="chip-row"></div>
+      <p class="label">Colour grade</p>
+      <div id="gradeBar" class="chip-row"></div>
+      <p class="label">Post size</p>
+      <div id="sizeBar" class="chip-row"></div>
+    </section>
+
+    <section class="card">
+      <h2>3 · Selected panel</h2>
+      <p id="panelName" class="panel-name">Panel 4 — HERO (pop-out)</p>
+      <label class="slider-label">Zoom <span id="zoomVal">100%</span>
+        <input id="zoomRange" type="range" min="0.6" max="3" step="0.01" value="1">
+      </label>
+      <label class="slider-label">Move left / right
+        <input id="dxRange" type="range" min="-0.5" max="0.5" step="0.01" value="0">
+      </label>
+      <label class="slider-label">Move up / down
+        <input id="dyRange" type="range" min="-0.5" max="0.5" step="0.01" value="0">
+      </label>
+      <div class="btn-row">
+        <button id="refaceBtn" class="ghost">Re-centre face</button>
+        <button id="resetCrop" class="ghost">Reset crop</button>
+      </div>
+      <p class="hint">Tip: click a panel on the cover, drag its photo to move it, scroll over it to zoom.</p>
+    </section>
+
+    <section class="card">
+      <h2>4 · Lettering &amp; cast</h2>
+      <label class="field-label">Cover title
+        <input id="titleInput" type="text" value="PALM NEON" maxlength="16">
+      </label>
+      <label class="field-label">Subtitle
+        <input id="subtitleInput" type="text" value="Sunset Coast" maxlength="28">
+      </label>
+      <label class="field-label">Tagline
+        <input id="taglineInput" type="text" value="Every sunset has a price" maxlength="42">
+      </label>
+      <label class="field-label">Seal text
+        <input id="sealInput" type="text" value="EST. 2026" maxlength="12">
+      </label>
+      <label class="slider-label">Heat meter <span id="starsVal">5 / 5</span>
+        <input id="starsRange" type="range" min="1" max="5" step="1" value="5">
+      </label>
+      <p class="label">Cast tags (shown on the panels)</p>
+      <div id="castEditor" class="cast-editor"></div>
+    </section>
+
+    <p class="fineprint">Original art drawn by this app. No game logos, artwork or fonts are used. Photos stay on your device.</p>
+  </aside>
 </main>
+
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>
